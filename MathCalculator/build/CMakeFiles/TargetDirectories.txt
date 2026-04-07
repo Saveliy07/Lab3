@@ -1,0 +1,6 @@
+C:/Users/SAVELY/OneDrive/Desktop/programm/MathCalculator/build/CMakeFiles/calc_lib.dir
+C:/Users/SAVELY/OneDrive/Desktop/programm/MathCalculator/build/CMakeFiles/calc.dir
+C:/Users/SAVELY/OneDrive/Desktop/programm/MathCalculator/build/CMakeFiles/unit_tests.dir
+C:/Users/SAVELY/OneDrive/Desktop/programm/MathCalculator/build/CMakeFiles/test.dir
+C:/Users/SAVELY/OneDrive/Desktop/programm/MathCalculator/build/CMakeFiles/edit_cache.dir
+C:/Users/SAVELY/OneDrive/Desktop/programm/MathCalculator/build/CMakeFiles/rebuild_cache.dir

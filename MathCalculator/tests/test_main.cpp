@@ -148,10 +148,86 @@ void test_error_unknown_variable() {
     assert(caught && "Should have thrown unknown variable error");
 }
 
+// ================= ТЕСТЫ ЛЕКСЕРА =================
+
+void test_lexer_numbers() {
+    Lexer lex("42 3.14 0.5");
+    
+    Token t = lex.next();
+    assert(t.type == lexem_t::NUM && t.value == "42" && t.numValue == 42.0);
+    
+    t = lex.next();
+    assert(t.type == lexem_t::NUM && t.value == "3.14" && t.numValue == 3.14);
+    
+    t = lex.next();
+    assert(t.type == lexem_t::NUM && t.value == "0.5" && t.numValue == 0.5);
+    
+    assert(lex.next().type == lexem_t::EOEX);
+}
+
+void test_lexer_operators() {
+    // Проверка игнорирования лишних пробелов
+    Lexer lex(" +  - * /   ^ ( ) ");
+    
+    assert(lex.next().value == "+");
+    assert(lex.next().value == "-");
+    assert(lex.next().value == "*");
+    assert(lex.next().value == "/");
+    assert(lex.next().value == "^");
+    assert(lex.next().value == "(");
+    assert(lex.next().value == ")");
+    assert(lex.next().type == lexem_t::EOEX);
+}
+
+void test_lexer_identifiers() {
+    // Проверка имен и перевода в нижний регистр
+    Lexer lex("x Sin My_Var");
+    
+    Token t = lex.next();
+    assert(t.type == lexem_t::ID && t.value == "x");
+    
+    t = lex.next();
+    assert(t.type == lexem_t::ID && t.value == "sin"); // Должен стать маленьким
+    
+    t = lex.next();
+    assert(t.type == lexem_t::ID && t.value == "my_var");
+    
+    assert(lex.next().type == lexem_t::EOEX);
+}
+
+void test_lexer_errors() {
+    bool caught = false;
+    
+    // 1. Две точки в числе
+    caught = false;
+    try { Lexer("1.2.3").next(); } catch (const std::runtime_error&) { caught = true; }
+    assert(caught && "Should have thrown multiple dots error");
+
+    // 2. Буква сразу после цифры
+    caught = false;
+    try { Lexer("5x").next(); } catch (const std::runtime_error&) { caught = true; }
+    assert(caught && "Should have thrown letter after number error");
+
+    // 3. Лидерские нули
+    caught = false;
+    try { Lexer("05").next(); } catch (const std::runtime_error&) { caught = true; }
+    assert(caught && "Should have thrown leading zero error");
+    
+    // 4. Неизвестный символ
+    caught = false;
+    try { Lexer("$").next(); } catch (const std::runtime_error&) { caught = true; }
+    assert(caught && "Should have thrown unknown character error");
+}
+
 // ================= MAIN =================
 
 int main() {
     std::cout << "--- Запуск юнит-тестов ---\n";
+
+    RUN_TEST(test_lexer_numbers);
+    RUN_TEST(test_lexer_operators);
+    RUN_TEST(test_lexer_identifiers);
+    RUN_TEST(test_lexer_errors);
     
     RUN_TEST(test_basic_arithmetic);
     RUN_TEST(test_operator_precedence);
